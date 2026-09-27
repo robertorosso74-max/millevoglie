@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Millevoglie - Pasticceria Artigianale & Palette Visualizer</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome per Icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+
+    <!-- Configurazione Tailwind e Variabili CSS per Palette Live Switch -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        cursive: ['"Pacifico"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            /* Palette Predefinita: Pastello Classico */
+            --bg-primary: #FFF9F5;
+            --bg-secondary: #FFF0F3;
+            --bg-card: #FFFFFF;
+            --text-main: #4A3E3D;
+            --text-muted: #7D6B69;
+            --accent-primary: #E88D93;
+            --accent-hover: #D7767C;
+            --accent-soft: #FDE8E9;
+            --border-color: #F3D5D7;
+            --gold-accent: #D4AF37;
+            --shadow-color: rgba(232, 141, 147, 0.15);
+        }
+
+        /* Palette 1: Pastello Classico */
+        [data-theme="pastello"] {
+            --bg-primary: #FFF9F5;
+            --bg-secondary: #FFF0F5;
+            --bg-card: #FFFFFF;
+            --text-main: #4A3E3D;
+            --text-muted: #7C6866;
+            --accent-primary: #E88D93;
+            --accent-hover: #D8757C;
+            --accent-soft: #FCE8EA;
+            --border-color: #F8D7DA;
+            --gold-accent: #E0A96D;
+            --shadow-color: rgba(232, 141, 147, 0.15);
+        }
+
+        /* Palette 2: Gourmet Chic */
+        [data-theme="gourmet"] {
+            --bg-primary: #1C1917;
+            --bg-secondary: #292524;
+            --bg-card: #201D1B;
+            --text-main: #F5F5F4;
+            --text-muted: #A8A29E;
+            --accent-primary: #D4AF37;
+            --accent-hover: #B59226;
+            --accent-soft: #38322B;
+            --border-color: #44403C;
+            --gold-accent: #E5C158;
+            --shadow-color: rgba(212, 175, 55, 0.12);
+        }
+
+        /* Palette 3: Fresco & Artigianale */
+        [data-theme="fresco"] {
+            --bg-primary: #F7F9F6;
+            --bg-secondary: #EBF1E9;
+            --bg-card: #FFFFFF;
+            --text-main: #2D3A2F;
+            --text-muted: #5C6E5F;
+            --accent-primary: #6B8E23;
+            --accent-hover: #55721B;
+            --accent-soft: #E2EBD8;
+            --border-color: #CBD8C8;
+            --gold-accent: #C88D4A;
+            --shadow-color: rgba(107, 142, 35, 0.15);
+        }
+
+        /* Palette 4: Pop & Moderno */
+        [data-theme="pop"] {
+            --bg-primary: #FFFDF9;
+            --bg-secondary: #EFF6FF;
+            --bg-card: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --accent-primary: #FF5A5F;
+            --accent-hover: #E03E43;
+            --accent-soft: #FFE4E6;
+            --border-color: #BAE6FD;
+            --gold-accent: #FFB703;
+            --shadow-color: rgba(255, 90, 95, 0.18);
+        }
+
+        /* Applicazione delle variabili CSS */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            transition: background-color 0.4s ease, color 0.4s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .bg-custom-primary { background-color: var(--bg-primary); }
+        .bg-custom-secondary { background-color: var(--bg-secondary); }
+        .bg-custom-card { background-color: var(--bg-card); }
+        .bg-custom-accent { background-color: var(--accent-primary); }
+        .bg-custom-accent-soft { background-color: var(--accent-soft); }
+        
+        .text-custom-main { color: var(--text-main); }
+        .text-custom-muted { color: var(--text-muted); }
+        .text-custom-accent { color: var(--accent-primary); }
+        .text-custom-gold { color: var(--gold-accent); }
+
+        .border-custom { border-color: var(--border-color); }
+        
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: #ffffff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px var(--shadow-color);
+        }
+        [data-theme="gourmet"] .btn-primary {
+            color: #1C1917;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 30px -5px var(--shadow-color);
+        }
+
+        /* Glassmorphism Effect per Header */
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Modal backdrop custom */
+        .modal-active {
+            display: flex !important;
+        }
+
+
+                /* Nascose barre di scorrimento */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Transizione fluida per lo scorrimento ad anello continuo */
+        #aree-container > div {
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-pink-300 selection:text-pink-900">
+
+    <!-- BARRA DI CONTROLLO PALETTE LIVE (FISSA IN ALTO) -->
+    <div id="palette-bar" class="bg-gray-900 text-white py-2 px-4 sticky top-0 z-50 shadow-md text-xs sm:text-sm border-b border-gray-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
+            <div class="flex items-center space-x-2">
+                <span class="bg-amber-500 text-gray-900 font-bold px-2 py-0.5 rounded text-xs uppercase tracking-wider">Demo Live</span>
+                <span class="font-medium">Seleziona una Palette Colori per Trasformare il Sito:</span>
+            </div>
+            <div class="flex items-center space-x-2 overflow-x-auto max-w-full pb-1 md:pb-0">
+                <button onclick="setTheme('pastello')" id="btn-pastello" class="theme-btn active border-2 border-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-pink-100 text-pink-900">
+                    <span class="w-2.5 h-2.5 rounded-full bg-pink-400 inline-block"></span> Pastello Classico
+                </button>
+                <button onclick="setTheme('gourmet')" id="btn-gourmet" class="theme-btn border-2 border-transparent px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-amber-950 text-amber-200 hover:border-amber-400">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> Gourmet Chic
+                </button>
+                <button onclick="setTheme('fresco')" id="btn-fresco" class="theme-btn border-2 border-transparent px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-emerald-950 text-emerald-200 hover:border-emerald-400">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Fresco & Artigianale
+                </button>
+                <button onclick="setTheme('pop')" id="btn-pop" class="theme-btn border-2 border-transparent px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition bg-rose-950 text-rose-200 hover:border-rose-400">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Pop & Moderno
+                </button>
+            </div>
+        </div>
+    </div>
+	<!-- SEZIONE SHOWCASE PALETTE (SPIEGAZIONE DELLE COLORAZIONI PER IL CLIENTE) -->
+    <section id="palette-info" class="py-16 bg-custom-primary transition-colors duration-300 border-y border-custom">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-custom-accent font-bold text-xs uppercase tracking-widest block mb-2">Guida alla Scelta Visiva</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-custom-main mb-4">Le 4 Identità Cromatiche per la tua Pasticceria</h2>
+                <p class="text-custom-muted text-sm sm:text-base">
+                    La scelta del colore definisce il posizionamento del tuo brand. Clicca sulle schede sottostanti o usa la barra in alto per valutare l'impatto visivo sul tuo sito.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Palette 1 Card -->
+                <div onclick="setTheme('pastello')" class="cursor-pointer bg-custom-card p-6 rounded-2xl border-2 hover:border-pink-400 transition-all card-shadow relative group">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif font-bold text-lg text-custom-main">1. Pastello Classico</h3>
+                        <span class="text-xs bg-pink-100 text-pink-800 px-2.5 py-1 rounded-full font-semibold">Tradizionale</span>
+                    </div>
+                    <p class="text-xs text-custom-muted mb-4 leading-relaxed">
+                        Rosa cipria, panna e accenti dolci. Comunica delicatezza, accoglienza e tradizione artigianale. Perfetto per cake design e Bakery classica.
+                    </p>
+                    <div class="flex h-8 rounded-lg overflow-hidden border border-gray-200">
+                        <div class="w-1/4 bg-[#FFF9F5]" title="#FFF9F5"></div>
+                        <div class="w-1/4 bg-[#FFF0F5]" title="#FFF0F5"></div>
+                        <div class="w-1/4 bg-[#E88D93]" title="#E88D93"></div>
+                        <div class="w-1/4 bg-[#4A3E3D]" title="#4A3E3D"></div>
+                    </div>
+                </div>
+
+                <!-- Palette 2 Card -->
+                <div onclick="setTheme('gourmet')" class="cursor-pointer bg-custom-card p-6 rounded-2xl border-2 hover:border-amber-500 transition-all card-shadow relative group">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif font-bold text-lg text-custom-main">2. Gourmet Chic</h3>
+                        <span class="text-xs bg-amber-100 text-amber-900 px-2.5 py-1 rounded-full font-semibold">Lusso & Dark</span>
+                    </div>
+                    <p class="text-xs text-custom-muted mb-4 leading-relaxed">
+                        Cioccolato fondente, nero elegante e tonalità oro. Ideale per cioccolaterie moderne, haute pâtisserie e boutique di lusso.
+                    </p>
+                    <div class="flex h-8 rounded-lg overflow-hidden border border-gray-700">
+                        <div class="w-1/4 bg-[#1C1917]" title="#1C1917"></div>
+                        <div class="w-1/4 bg-[#292524]" title="#292524"></div>
+                        <div class="w-1/4 bg-[#D4AF37]" title="#D4AF37"></div>
+                        <div class="w-1/4 bg-[#F5F5F4]" title="#F5F5F4"></div>
+                    </div>
+                </div>
+
+                <!-- Palette 3 Card -->
+                <div onclick="setTheme('fresco')" class="cursor-pointer bg-custom-card p-6 rounded-2xl border-2 hover:border-emerald-500 transition-all card-shadow relative group">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif font-bold text-lg text-custom-main">3. Fresco & Bio</h3>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-semibold">Naturale</span>
+                    </div>
+                    <p class="text-xs text-custom-muted mb-4 leading-relaxed">
+                        Verde salvia, bianco caldo e toni terra. Trasmette sostenibilità, ingredienti a km 0, filiera biologica e opzioni vegan / gluten-free.
+                    </p>
+                    <div class="flex h-8 rounded-lg overflow-hidden border border-gray-200">
+                        <div class="w-1/4 bg-[#F7F9F6]" title="#F7F9F6"></div>
+                        <div class="w-1/4 bg-[#EBF1E9]" title="#EBF1E9"></div>
+                        <div class="w-1/4 bg-[#6B8E23]" title="#6B8E23"></div>
+                        <div class="w-1/4 bg-[#2D3A2F]" title="#2D3A2F"></div>
+                    </div>
+                </div>
+
+                <!-- Palette 4 Card -->
+                <div onclick="setTheme('pop')" class="cursor-pointer bg-custom-card p-6 rounded-2xl border-2 hover:border-rose-400 transition-all card-shadow relative group">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif font-bold text-lg text-custom-main">4. Pop & Moderno</h3>
+                        <span class="text-xs bg-rose-100 text-rose-800 px-2.5 py-1 rounded-full font-semibold">Giovane</span>
+                    </div>
+                    <p class="text-xs text-custom-muted mb-4 leading-relaxed">
+                        Rosa corallo vivace, celeste ed accenti solari. Perfetto per bakery americane, donut shop, bubble tea e format ad alto impatto Instagram.
+                    </p>
+                    <div class="flex h-8 rounded-lg overflow-hidden border border-gray-200">
+                        <div class="w-1/4 bg-[#FFFDF9]" title="#FFFDF9"></div>
+                        <div class="w-1/4 bg-[#EFF6FF]" title="#EFF6FF"></div>
+                        <div class="w-1/4 bg-[#FF5A5F]" title="#FF5A5F"></div>
+                        <div class="w-1/4 bg-[#1E293B]" title="#1E293B"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+ 
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="glass-nav sticky top-[41px] md:top-[37px] z-40 transition-colors duration-300 border-b border-custom">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-custom-accent flex items-center justify-center text-white text-xl shadow-md group-hover:rotate-12 transition-transform duration-300">
+                    <i class="fa-solid fa-cake-candles"></i>
+                </div>
+                <div>
+                    <span class="font-serif text-2xl font-bold tracking-tight text-custom-main block leading-none">Millevoglie</span>
+                    <span class="font-cursive text-sm text-custom-accent block -mt-1">Pasticceria Artigianale</span>
+                </div>
+            </a>
+
+            <!-- Nav Links Desktop -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-sm">
+                <a href="#palette-info" class="text-custom-main hover:text-custom-accent transition">Confronto Palette</a>
+                <a href="#prodotti" class="text-custom-main hover:text-custom-accent transition">Le Creazioni</a>
+                <a href="#perche-noi" class="text-custom-main hover:text-custom-accent transition">Perché Sceglierci</a>
+                <a href="#configuratore" class="text-custom-main hover:text-custom-accent transition">Crea la tua Torta</a>
+                <a href="#contatti" class="text-custom-main hover:text-custom-accent transition">Contatti</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="hidden sm:flex items-center space-x-4">
+                <a href="#configuratore" class="btn-primary px-5 py-2.5 rounded-full font-semibold text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Prenota Torta</span>
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-custom-main p-2 rounded-lg text-xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-custom-card border-b border-custom px-4 pt-2 pb-6 space-y-3">
+            <a href="#prodotti" onclick="toggleMobileMenu()" class="block py-2 text-custom-main font-medium border-b border-custom">Le Creazioni</a>
+            <a href="#perche-noi" onclick="toggleMobileMenu()" class="block py-2 text-custom-main font-medium border-b border-custom">Perché Sceglierci</a>
+            <a href="#configuratore" onclick="toggleMobileMenu()" class="block py-2 text-custom-main font-medium border-b border-custom">Crea la tua Torta</a>
+            <a href="#contatti" onclick="toggleMobileMenu()" class="block py-2 text-custom-main font-medium">Contatti</a>
+            <a href="#configuratore" onclick="toggleMobileMenu()" class="btn-primary w-full py-3 rounded-xl font-semibold text-center block mt-4">
+                Prenota Torta Personalizzata
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden py-16 lg:py-24 bg-custom-secondary transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Text Content -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-custom-accent-soft text-custom-accent font-semibold text-xs uppercase tracking-widest border border-custom">
+                        <i class="fa-solid fa-star text-custom-gold"></i>
+                         Alta Pasticceria dal 1988
+                    </div>
+                    
+                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold text-custom-main leading-tight">
+                        La tradizione dell'alta pasticceria, <span class="italic font-normal text-custom-accent">direttamente a casa tua.</span>
+                    </h1>
+                    
+                    <p class="text-base sm:text-lg text-custom-muted max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                        Ingredienti selezionati con cura, lavorazione artigianale quotidiana e dolci personalizzati creati su misura per ogni tua ricorrenza speciale.
+                    </p>
+                    
+                    <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                        <a href="#prodotti" class="btn-primary w-full sm:w-auto px-8 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3">
+                            <span>Scopri il Menu del Giorno</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#configuratore" class="w-full sm:w-auto px-8 py-4 rounded-full font-semibold text-base text-custom-main border-2 border-custom bg-custom-card hover:border-custom-accent transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-sliders text-custom-accent"></i>
+                            <span>Personalizza Torta</span>
+                        </a>
+                    </div>
+
+                    <!-- Trust Badge -->
+                    <div class="pt-6 flex items-center justify-center lg:justify-start gap-6 border-t border-custom mt-8 text-xs text-custom-muted">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-truck-fast text-custom-accent text-base"></i>
+                            <span>Consegna Refrigerata Express</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-wheat-awn text-custom-accent text-base"></i>
+                            <span>Farine Bio & Burro d'Alpeggio</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Hero Card -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        <div class="aspect-square rounded-3xl overflow-hidden card-shadow border-4 border-custom bg-custom-card relative group">
+                            <img src="images/royalecioccolato.jpg" 
+                                 alt="Torta Artigianale Gourmet" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            
+                            <!-- Floating Badge -->
+                            <div class="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-custom-card/95 backdrop-blur border border-custom shadow-lg flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs text-custom-muted font-semibold uppercase">Novità di Stagione</p>
+                                    <p class="font-serif font-bold text-custom-main text-lg">Torta Mousse ai Frutti Rossi</p>
+                                </div>
+                                <span class="font-serif font-bold text-custom-accent text-xl">€34.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Decoration Badge -->
+                        <div class="absolute -top-6 -right-6 w-24 h-24 bg-custom-accent rounded-full text-white flex flex-col items-center justify-center shadow-lg transform rotate-12 hidden sm:flex">
+                            <span class="text-xs font-bold uppercase">Freschi</span>
+                            <span class="font-serif text-lg font-extrabold leading-none">Oggi</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+   
+<!-- SEZIONE AREE TEMATICHE (SLIDER) -->
+<section id="aree-tematiche" class="py-16 bg-custom-primary transition-colors duration-300 relative border-t border-custom">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header della Sezione -->
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <span class="text-custom-accent font-bold text-xs uppercase tracking-widest block mb-2">Esplora il Nostro Mondo</span>
+            <h2 class="font-serif text-3xl sm:text-4xl font-bold text-custom-main mb-3">Aree Tematiche & Specialità</h2>
+            <p class="text-custom-muted text-sm sm:text-base">
+                Scopri tutti i settori della nostra pasticceria: dalla colazione quotidiana ai grandi eventi su misura.
+            </p>
+        </div>
+
+        <!-- Contenitore Slider con Pulsanti a comparsa -->
+        <div class="relative group">
+            <!-- Pulsante Sinistra < (Barra Verticale) -->
+<button onclick="scrollAree('left')" 
+aria-label="Precedente"
+class="absolute left-0 top-1/2 -translate-y-1/2 z-20 h-28 w-9 sm:w-10 rounded-r-2xl bg-custom-card/90 backdrop-blur-md border-y border-r border-custom text-custom-main shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:w-12 hover:bg-custom-accent hover:text-white hover:border-transparent focus:outline-none">
+<i class="fa-solid fa-chevron-left text-lg"></i>
+</button>
+
+<!-- Pulsante Destra > (Barra Verticale) -->
+<button onclick="scrollAree('right')" 
+aria-label="Successivo"
+class="absolute right-0 top-1/2 -translate-y-1/2 z-20 h-28 w-9 sm:w-10 rounded-l-2xl bg-custom-card/90 backdrop-blur-md border-y border-l border-custom text-custom-main shadow-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:w-12 hover:bg-custom-accent hover:text-white hover:border-transparent focus:outline-none">
+<i class="fa-solid fa-chevron-right text-lg"></i>
+</button>
+           
+            <!-- Slider Orizzontale (Senza Barra di Scorrimento Visibile) -->
+            <!-- Slider Orizzontale Continuo -->
+<div id="aree-container" class="flex gap-6 overflow-hidden py-4 px-1">
+    
+    <!-- Card 1 -->
+    <a href="pasticceria-fresca.html" class="flex-none w-72 sm:w-80 bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group/card transition-all duration-300 hover:-translate-y-1.5 block cursor-pointer">
+        <div class="relative h-48 overflow-hidden">
+            <img src="images/pasticceria.jpg" 
+                 alt="Pasticceria Fresca" 
+                 class="w-full h-full object-cover group-hover/card:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <span class="absolute bottom-3 left-3 text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-gem text-custom-gold"></i> Produzione Giornaliera
+            </span>
+        </div>
+        <div class="p-6 space-y-2 relative">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-xl text-custom-main group-hover/card:text-custom-accent transition">Pasticceria Fresca</h3>
+                <i class="fa-solid fa-arrow-right text-custom-accent transform -translate-x-2 opacity-0 group-hover/card:translate-x-0 group-hover/card:opacity-100 transition-all duration-300"></i>
+            </div>
+            <p class="text-xs text-custom-muted leading-relaxed">
+                Mignon classici, mignon moderni e monoporzioni raffinate preparate ogni mattina per deliziare i tuoi momenti di pausa.
+            </p>
+        </div>
+    </a>
+
+    <!-- Card 2 -->
+    <a href="colazione-lievitati.html" class="flex-none w-72 sm:w-80 bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group/card transition-all duration-300 hover:-translate-y-1.5 block cursor-pointer">
+        <div class="relative h-48 overflow-hidden">
+            <img src="images/colazione.jpg" 
+                 alt="La colazione" 
+                 class="w-full h-full object-cover group-hover/card:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <span class="absolute bottom-3 left-3 text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-mug-hot text-custom-gold"></i> Dalle 07:30
+            </span>
+        </div>
+        <div class="p-6 space-y-2 relative">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-xl text-custom-main group-hover/card:text-custom-accent transition">La colazione</h3>
+                <i class="fa-solid fa-arrow-right text-custom-accent transform -translate-x-2 opacity-0 group-hover/card:translate-x-0 group-hover/card:opacity-100 transition-all duration-300"></i>
+            </div>
+            <p class="text-xs text-custom-muted leading-relaxed">
+                Brioche sfogliate al burro, cornetti farciti al momento e trecce con lievito madre naturale per un risveglio perfetto.
+            </p>
+        </div>
+    </a>
+
+    <!-- Card 3 -->
+    <a href="torte-cerimonie.html" class="flex-none w-72 sm:w-80 bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group/card transition-all duration-300 hover:-translate-y-1.5 block cursor-pointer">
+        <div class="relative h-48 overflow-hidden">
+            <img src="images/torta.jpg" 
+                 alt="Torte d'Autore" 
+                 class="w-full h-full object-cover group-hover/card:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <span class="absolute bottom-3 left-3 text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-crown text-custom-gold"></i> Le torte
+            </span>
+        </div>
+        <div class="p-6 space-y-2 relative">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-xl text-custom-main group-hover/card:text-custom-accent transition">Torte & Cerimonie</h3>
+                <i class="fa-solid fa-arrow-right text-custom-accent transform -translate-x-2 opacity-0 group-hover/card:translate-x-0 group-hover/card:opacity-100 transition-all duration-300"></i>
+            </div>
+            <p class="text-xs text-custom-muted leading-relaxed">
+                Creazioni scenografiche per compleanni, matrimoni e ricorrenze speciali personalizzabili secondo ogni esigenza.
+            </p>
+        </div>
+    </a>
+
+    <!-- Card 4 -->
+    <a href="pausa-pranzo.html" class="flex-none w-72 sm:w-80 bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group/card transition-all duration-300 hover:-translate-y-1.5 block cursor-pointer">
+        <div class="relative h-48 overflow-hidden">
+            <img src="images/primo.jpg" 
+                 alt="La nostra pausa pranzo" 
+                 class="w-full h-full object-cover group-hover/card:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <span class="absolute bottom-3 left-3 text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-heart text-custom-gold"></i> La nostra pausa pranzo
+            </span>
+        </div>
+        <div class="p-6 space-y-2 relative">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-xl text-custom-main group-hover/card:text-custom-accent transition">La pausa pranzo</h3>
+                <i class="fa-solid fa-arrow-right text-custom-accent transform -translate-x-2 opacity-0 group-hover/card:translate-x-0 group-hover/card:opacity-100 transition-all duration-300"></i>
+            </div>
+            <p class="text-xs text-custom-muted leading-relaxed">
+                Praline fatte a mano, tavolette di cru pregiati e soggetti in cioccolato lavorati dai nostri maestri cioccolatieri.
+            </p>
+        </div>
+    </a>
+
+    <!-- Card 5 -->
+    <a href="lievitati-feste.html" class="flex-none w-72 sm:w-80 bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group/card transition-all duration-300 hover:-translate-y-1.5 block cursor-pointer">
+        <div class="relative h-48 overflow-hidden">
+            <img src="images/panettone.jpg" 
+                 alt="Lievitati delle Feste" 
+                 class="w-full h-full object-cover group-hover/card:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <span class="absolute bottom-3 left-3 text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-gift text-custom-gold"></i> Edizioni Speciali
+            </span>
+        </div>
+        <div class="p-6 space-y-2 relative">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-xl text-custom-main group-hover/card:text-custom-accent transition">Lievitati delle Feste</h3>
+                <i class="fa-solid fa-arrow-right text-custom-accent transform -translate-x-2 opacity-0 group-hover/card:translate-x-0 group-hover/card:opacity-100 transition-all duration-300"></i>
+            </div>
+            <p class="text-xs text-custom-muted leading-relaxed">
+                Panettoni, Colombe e Pandori artigianali a lievitazione lenta di 48 ore con canditi di prima qualità e bacche di vaniglia.
+            </p>
+        </div>
+    </a>
+<!-- Card 6 -->
+<a href="aperitivi.html" class="flex-none w-72 sm:w-80 bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group/card transition-all duration-300 hover:-translate-y-1.5 block cursor-pointer">
+    <div class="relative h-48 overflow-hidden">
+        <img src="images/aperitivo.jpg" 
+             alt="i nostri aperitivi" 
+             class="w-full h-full object-cover group-hover/card:scale-110 transition duration-500">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        <span class="absolute bottom-3 left-3 text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-martini-glass text-custom-gold"></i>I nostri aperitivi
+        </span>
+    </div>
+    <div class="p-6 space-y-2 relative">
+        <div class="flex items-center justify-between">
+            <h3 class="font-serif font-bold text-xl text-custom-main group-hover/card:text-custom-accent transition">I nostri aperitivi</h3>
+            <i class="fa-solid fa-arrow-right text-custom-accent transform -translate-x-2 opacity-0 group-hover/card:translate-x-0 group-hover/card:opacity-100 transition-all duration-300"></i>
+        </div>
+        <p class="text-xs text-custom-muted leading-relaxed">
+            Trascorri il tuo momento di relax con i nostri aperitivi
+        </p>
+    </div>
+</a>
+    <!-- Card 7 -->
+    <a href="cioccolateria-realistica.html" class="flex-none w-72 sm:w-80 bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group/card transition-all duration-300 hover:-translate-y-1.5 block cursor-pointer">
+        <div class="relative h-48 overflow-hidden">
+            <img src="images/frutta.jpg" 
+                 alt="La cioccolata e la frutta realistica" 
+                 class="w-full h-full object-cover group-hover/card:scale-110 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <span class="absolute bottom-3 left-3 text-white text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-heart text-custom-gold"></i> Cacao Selezionato e frutta realistica
+            </span>
+        </div>
+        <div class="p-6 space-y-2 relative">
+            <div class="flex items-center justify-between">
+                <h3 class="font-serif font-bold text-xl text-custom-main group-hover/card:text-custom-accent transition">Cioccolateria & Frutta realistica</h3>
+                <i class="fa-solid fa-arrow-right text-custom-accent transform -translate-x-2 opacity-0 group-hover/card:translate-x-0 group-hover/card:opacity-100 transition-all duration-300"></i>
+            </div>
+            <p class="text-xs text-custom-muted leading-relaxed">
+                Praline fatte a mano, tavolette di cru pregiati e frutta realistica
+            </p>
+        </div>
+    </a>
+</div>
+        </div>
+    </div>
+
+   </section> 
+
+    <!-- SEZIONE PRODOTTI IN EVIDENZA -->
+    <section id="prodotti" class="py-20 bg-custom-secondary transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-custom-accent font-bold text-xs uppercase tracking-widest block mb-2">Squisitezze Giornaliere</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-custom-main">Le Nostre Creazioni In Evidenza</h2>
+                </div>
+                <p class="text-custom-muted text-sm max-w-md mt-4 md:mt-0">
+                    Ogni dolce è realizzato a mano ogni mattina dal nostro Mastro Pasticcere con ingredienti freschi di giornata.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Prodotto 1 -->
+                <div class="bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group transition-all duration-300 hover:-translate-y-1">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="images/monoporzioni.jpg" 
+                             alt="Monoporzione Gourmet" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-custom-accent text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                            Monoporzioni
+                        </span>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <h3 class="font-serif font-bold text-xl text-custom-main">Tartelletta ai Frutti di Bosco</h3>
+                        <p class="text-xs text-custom-muted leading-relaxed">
+                            Pasta frolla al burro di malga, crema diplomatica alla vaniglia Bourbon e frutti rossi freschi.
+                        </p>
+                        <div class="flex items-center justify-between pt-3 border-t border-custom">
+                            <span class="font-serif font-bold text-lg text-custom-accent">€ 6.50</span>
+                            <button onclick="openModal('Tartelletta ai Frutti di Bosco', '6.50')" class="btn-primary px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-plus"></i> Ordina
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prodotto 2 -->
+                <div class="bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group transition-all duration-300 hover:-translate-y-1">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="images/royalecioccolato.jpg" 
+                             alt="Torta Eventi" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-custom-accent text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                            Cerimonie
+                        </span>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <h3 class="font-serif font-bold text-xl text-custom-main">Torta Royal al Cioccolato</h3>
+                        <p class="text-xs text-custom-muted leading-relaxed">
+                            Pan di Spagna al cacao, mousse al cioccolato fondente 72% e glassa a specchio rocher.
+                        </p>
+                        <div class="flex items-center justify-between pt-3 border-t border-custom">
+                            <span class="font-serif font-bold text-lg text-custom-accent">€ 38.00</span>
+                            <button onclick="openModal('Torta Royal al Cioccolato', '38.00')" class="btn-primary px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-plus"></i> Ordina
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prodotto 3 -->
+                <div class="bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group transition-all duration-300 hover:-translate-y-1">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="images/cornetti.jpg" 
+                             alt="Lievitati" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-custom-accent text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                            Colazione
+                        </span>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <h3 class="font-serif font-bold text-xl text-custom-main">Croissant Sfoglia d'Oro</h3>
+                        <p class="text-xs text-custom-muted leading-relaxed">
+                            Lievitazione naturale 36 ore, sfogliatura con burro francese, ripieno a scelta con pistacchio o nocciola.
+                        </p>
+                        <div class="flex items-center justify-between pt-3 border-t border-custom">
+                            <span class="font-serif font-bold text-lg text-custom-accent">€ 2.50</span>
+                            <button onclick="openModal('Croissant Sfoglia d\'Oro', '2.50')" class="btn-primary px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-plus"></i> Ordina
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prodotto 4 -->
+                <div class="bg-custom-card rounded-2xl overflow-hidden border border-custom card-shadow group transition-all duration-300 hover:-translate-y-1">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="images/praline.jpg" 
+                             alt="Praline Cioccolato" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <span class="absolute top-3 right-3 bg-custom-accent text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                            Pralineria
+                        </span>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <h3 class="font-serif font-bold text-xl text-custom-main">Cofanetto Praline Artigianali</h3>
+                        <p class="text-xs text-custom-muted leading-relaxed">
+                            Assortimento di 16 praline ripiene di ganache alla frutta, spezie ed infusi pregiati.
+                        </p>
+                        <div class="flex items-center justify-between pt-3 border-t border-custom">
+                            <span class="font-serif font-bold text-lg text-custom-accent">€ 22.00</span>
+                            <button onclick="openModal('Cofanetto Praline Artigianali', '22.00')" class="btn-primary px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5">
+                                <i class="fa-solid fa-cart-plus"></i> Ordina
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PERCHÉ SCEGLIERCI -->
+    <section id="perche-noi" class="py-20 bg-custom-primary transition-colors duration-300 border-t border-custom">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-custom-accent font-bold text-xs uppercase tracking-widest block mb-2">Il Nostro Impegno</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-custom-main">I Valori del Nostro Laboratorio</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="bg-custom-card p-8 rounded-3xl border border-custom card-shadow text-center space-y-4">
+                    <div class="w-16 h-16 rounded-2xl bg-custom-accent-soft text-custom-accent flex items-center justify-center text-2xl mx-auto">
+                        <i class="fa-solid fa-jar"></i>
+                    </div>
+                    <h3 class="font-serif font-bold text-xl text-custom-main">100% Artigianale</h3>
+                    <p class="text-xs text-custom-muted leading-relaxed">
+                        Nessun preparato industriale né conservanti aggiunti. Lavoriamo solo farina, uova fresche da allevamenti all'aperto e burro vero.
+                    </p>
+                </div>
+
+                <div class="bg-custom-card p-8 rounded-3xl border border-custom card-shadow text-center space-y-4">
+                    <div class="w-16 h-16 rounded-2xl bg-custom-accent-soft text-custom-accent flex items-center justify-center text-2xl mx-auto">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <h3 class="font-serif font-bold text-xl text-custom-main">Ingredienti Locali & D.O.P.</h3>
+                    <p class="text-xs text-custom-muted leading-relaxed">
+                        Selezioniamo solo frutta fresca di stagione da agricoltura locale, nocciole Piemonte IGP e pistacchio di Bronte DOP.
+                    </p>
+                </div>
+
+                <div class="bg-custom-card p-8 rounded-3xl border border-custom card-shadow text-center space-y-4">
+                    <div class="w-16 h-16 rounded-2xl bg-custom-accent-soft text-custom-accent flex items-center justify-center text-2xl mx-auto">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="font-serif font-bold text-xl text-custom-main">Personalizzazione Totale</h3>
+                    <p class="text-xs text-custom-muted leading-relaxed">
+                        Realizziamo torte per compleanni, matrimoni ed eventi aziendali personalizzando gusto, decorazioni e messaggi dediche.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CONFIGURATORE INTERATTIVO TORTA -->
+    <section id="configuratore" class="py-20 bg-custom-secondary transition-colors duration-300 border-t border-custom">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-custom-card rounded-3xl p-6 sm:p-10 border-2 border-custom card-shadow">
+                
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <span class="text-custom-accent font-bold text-xs uppercase tracking-widest block mb-2">Simulatore d'Ordine</span>
+                    <h2 class="font-serif text-3xl font-bold text-custom-main">Configura la Tua Torta su Misura</h2>
+                    <p class="text-xs text-custom-muted mt-2">
+                        Scegli gli ingredienti e calcola la stima del prezzo in tempo reale per la tua festa.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Form Controlli -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Dimensioni / Persone -->
+                        <div>
+                            <label class="block text-xs font-bold text-custom-main uppercase mb-2">1. Numero di Porzioni</label>
+                            <select id="cake-size" onchange="calculateCakePrice()" class="w-full bg-custom-primary border border-custom rounded-xl p-3 text-sm text-custom-main focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                                <option value="6" data-price="25">Piccola (6 porzioni) - €25.00</option>
+                                <option value="10" data-price="38" selected>Media (10 porzioni) - €38.00</option>
+                                <option value="16" data-price="55">Grande (16 porzioni) - €55.00</option>
+                                <option value="25" data-price="85">Festa (25 porzioni) - €85.00</option>
+                            </select>
+                        </div>
+
+                        <!-- Basetta -->
+                        <div>
+                            <label class="block text-xs font-bold text-custom-main uppercase mb-2">2. Base del Pan di Spagna</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button type="button" onclick="selectOption('base', 'Classica Vaniglia', 0, this)" class="opt-base active-opt border-2 border-custom bg-custom-accent-soft text-custom-main p-2.5 rounded-xl text-xs font-semibold text-center transition">
+                                    Vaniglia
+                                </button>
+                                <button type="button" onclick="selectOption('base', 'Cacao Soffice', 3, this)" class="opt-base border border-custom bg-custom-primary text-custom-main p-2.5 rounded-xl text-xs font-semibold text-center transition">
+                                    Cacao (+3€)
+                                </button>
+                                <button type="button" onclick="selectOption('base', 'Red Velvet', 5, this)" class="opt-base border border-custom bg-custom-primary text-custom-main p-2.5 rounded-xl text-xs font-semibold text-center transition">
+                                    Red Velvet (+5€)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Crema -->
+                        <div>
+                            <label class="block text-xs font-bold text-custom-main uppercase mb-2">3. Farcitura Principale</label>
+                            <select id="cake-cream" onchange="calculateCakePrice()" class="w-full bg-custom-primary border border-custom rounded-xl p-3 text-sm text-custom-main focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                                <option value="Crema Chantilly" data-add="0">Crema Chantilly Tradizionale</option>
+                                <option value="Cioccolato Gianduia" data-add="4">Cioccolato Gianduia (+€4.00)</option>
+                                <option value="Pistacchio Puro DOP" data-add="6">Pistacchio di Bronte DOP (+€6.00)</option>
+                                <option value="Frutti di Bosco e Chantilly" data-add="5">Chantilly & Frutti di Bosco (+€5.00)</option>
+                            </select>
+                        </div>
+
+                        <!-- Decorazione / Extra -->
+                        <div>
+                            <label class="block text-xs font-bold text-custom-main uppercase mb-2">4. Decorazione & Scritta</label>
+                            <input type="text" id="cake-text" placeholder="Es. Buon Compleanno Marco!" class="w-full bg-custom-primary border border-custom rounded-xl p-3 text-sm text-custom-main focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                        </div>
+
+                    </div>
+
+                    <!-- Live Summary Preview Box -->
+                    <div class="lg:col-span-5 bg-custom-primary p-6 rounded-2xl border border-custom space-y-4">
+                        <h3 class="font-serif font-bold text-lg text-custom-main border-b border-custom pb-2">Riepilogo Configurazione</h3>
+                        
+                        <div class="space-y-2 text-xs text-custom-muted">
+                            <div class="flex justify-between">
+                                <span>Porzioni:</span>
+                                <span id="summary-size" class="font-bold text-custom-main">10 Porzioni</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Base:</span>
+                                <span id="summary-base" class="font-bold text-custom-main">Classica Vaniglia</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Farcitura:</span>
+                                <span id="summary-cream" class="font-bold text-custom-main">Crema Chantilly</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-custom flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-custom-muted block">Prezzo Stimato</span>
+                                <span id="total-price" class="font-serif text-3xl font-extrabold text-custom-accent">€ 38.00</span>
+                            </div>
+                            <button onclick="submitCustomOrder()" class="btn-primary px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Invia su WA</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- RECENSIONI & INSTAGRAM GRID -->
+    <section class="py-20 bg-custom-primary transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-custom-accent font-bold text-xs uppercase tracking-widest block mb-2">#Millevoglie</span>
+                <h2 class="font-serif text-3xl font-bold text-custom-main">Dicono di Noi su Instagram</h2>
+                <div class="flex items-center justify-center gap-1 text-custom-gold mt-2 text-sm">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <span class="text-custom-main font-bold ml-2">4.9 / 5 su Google (340+ Recensioni)</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="aspect-square rounded-2xl overflow-hidden relative group border border-custom">
+                    <img src="images/dolcetto.avif" alt="Insta 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xl">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden relative group border border-custom">
+                    <img src="images/tortabianca.avif" alt="Insta 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xl">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden relative group border border-custom">
+                    <img src="images/cake.avif" alt="Insta 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xl">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                </div>
+                <div class="aspect-square rounded-2xl overflow-hidden relative group border border-custom">
+                    <img src="images/cake.avif" alt="Insta 4" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xl">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER / CONTATTI -->
+    <footer id="contatti" class="bg-custom-secondary border-t border-custom pt-16 pb-12 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-custom">
+                
+                <!-- Info Brand -->
+                <div class="md:col-span-5 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-custom-accent flex items-center justify-center text-white text-xl">
+                            <i class="fa-solid fa-cake-candles"></i>
+                        </div>
+                        <span class="font-serif text-2xl font-bold text-custom-main">Millevoglie</span>
+                    </div>
+                    <p class="text-xs text-custom-muted leading-relaxed max-w-sm">
+                        Dal 1988 la tua pasticceria di fiducia nel cuore delle Marche. Tradizione, innovazione e tanta passione per l'arte dolce.
+                    </p>
+                    <div class="pt-2 flex items-center space-x-3 text-custom-main">
+                        <a href="#" class="w-9 h-9 rounded-full bg-custom-card border border-custom flex items-center justify-center hover:text-custom-accent transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-custom-card border border-custom flex items-center justify-center hover:text-custom-accent transition"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-custom-card border border-custom flex items-center justify-center hover:text-custom-accent transition"><i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- Orari -->
+                <div class="md:col-span-3 space-y-3">
+                    <h4 class="font-serif font-bold text-custom-main text-base">Orari di Apertura</h4>
+                    <ul class="text-xs text-custom-muted space-y-2">
+                        <li class="flex justify-between"><span>Lunedì:</span> <span class="font-bold text-custom-main">Chiuso</span></li>
+                        <li class="flex justify-between"><span>Martedì - Sabato:</span> <span>07:30 - 20:00</span></li>
+                        <li class="flex justify-between"><span>Domenica:</span> <span>08:00 - 13:30</span></li>
+                    </ul>
+                </div>
+
+                <!-- Indirizzo e Contatto -->
+                <div class="md:col-span-4 space-y-3">
+                    <h4 class="font-serif font-bold text-custom-main text-base">Dove Trovarci</h4>
+                    <p class="text-xs text-custom-muted flex items-start gap-2">
+                        <i class="fa-solid fa-location-dot text-custom-accent mt-0.5"></i>
+                        <span>Via Aprutina 1, 63873 Marina di Altidona(FM)</span>
+                    </p>
+                    <p class="text-xs text-custom-muted flex items-center gap-2">
+                        <i class="fa-solid fa-phone text-custom-accent"></i>
+                        <span>+39 0123456</span>
+                    </p>
+                    <div class="pt-2">
+                        <button onclick="triggerWhatsAppDirect()" class="btn-primary w-full py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-whatsapp text-base"></i>
+                            <span>Scrivici subito su WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Credits -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-custom-muted gap-4">
+                <p>&copy; 2026 Millevoglie Pasticceria - Tutti i diritti riservati.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="hover:underline">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DI ORDINE RAPIDO -->
+    <div id="order-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-custom-card border-2 border-custom rounded-3xl max-w-md w-full p-6 card-shadow relative animate-fade-in">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-custom-muted hover:text-custom-main text-lg p-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="text-center space-y-3 mb-6">
+                <div class="w-12 h-12 rounded-full bg-custom-accent-soft text-custom-accent flex items-center justify-center text-xl mx-auto">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <h3 class="font-serif font-bold text-2xl text-custom-main">Ordina Dolci</h3>
+                <p id="modal-product-name" class="text-sm font-semibold text-custom-accent">Nome Prodotto</p>
+            </div>
+
+            <form onsubmit="handleModalSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-custom-main uppercase mb-1">Il Tuo Nome</label>
+                    <input type="text" required placeholder="Inserisci il tuo nome" class="w-full bg-custom-primary border border-custom rounded-xl p-3 text-sm text-custom-main focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-custom-main uppercase mb-1">Data del Ritiro / Consegna</label>
+                    <input type="date" required class="w-full bg-custom-primary border border-custom rounded-xl p-3 text-sm text-custom-main focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-custom-main uppercase mb-1">Note / Allergie</label>
+                    <textarea placeholder="Eventuali intolleranze o note per il pasticcere..." class="w-full bg-custom-primary border border-custom rounded-xl p-3 text-sm text-custom-main focus:outline-none focus:ring-2 focus:ring-custom-accent h-20"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="btn-primary w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Conferma Ordina via WhatsApp</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Stato dell'applicazione
+        let currentBasePrice = 38;
+        let currentBaseExtra = 0;
+        let selectedBaseName = "Classica Vaniglia";
+
+        // Cambia Tema / Palette Colori Live
+        function setTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            
+            // Aggiorna stato attivo dei pulsanti nella topbar
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('border-white', 'scale-105');
+                btn.classList.add('border-transparent');
+            });
+
+            const activeBtn = document.getElementById(`btn-${themeName}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-transparent');
+                activeBtn.classList.add('border-white', 'scale-105');
+            }
+        }
+
+        // Toggle Menu Mobile
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Calcolo Prezzo Torta Custom nel Configuratore
+        function selectOption(type, name, extraPrice, btnElement) {
+            if (type === 'base') {
+                document.querySelectorAll('.opt-base').forEach(b => {
+                    b.classList.remove('active-opt', 'bg-custom-accent-soft');
+                    b.classList.add('bg-custom-primary');
+                });
+                btnElement.classList.add('active-opt', 'bg-custom-accent-soft');
+                currentBaseExtra = extraPrice;
+                selectedBaseName = name;
+                document.getElementById('summary-base').innerText = name;
+            }
+            calculateCakePrice();
+        }
+
+        function calculateCakePrice() {
+            const sizeSelect = document.getElementById('cake-size');
+            const selectedSizeOpt = sizeSelect.options[sizeSelect.selectedIndex];
+            const sizePrice = parseFloat(selectedSizeOpt.getAttribute('data-price'));
+            const sizeText = selectedSizeOpt.text.split('(')[0];
+
+            const creamSelect = document.getElementById('cake-cream');
+            const selectedCreamOpt = creamSelect.options[creamSelect.selectedIndex];
+            const creamExtra = parseFloat(selectedCreamOpt.getAttribute('data-add'));
+
+            const totalPrice = sizePrice + currentBaseExtra + creamExtra;
+
+            // Aggiorna UI
+            document.getElementById('summary-size').innerText = sizeText;
+            document.getElementById('summary-cream').innerText = selectedCreamOpt.value;
+            document.getElementById('total-price').innerText = `€ ${totalPrice.toFixed(2)}`;
+        }
+
+        // Modal Handlers
+        function openModal(productName, price) {
+            document.getElementById('modal-product-name').innerText = `${productName} (€ ${price})`;
+            document.getElementById('order-modal').classList.add('modal-active');
+        }
+
+        function closeModal() {
+            document.getElementById('order-modal').classList.remove('modal-active');
+        }
+
+        function handleModalSubmit(e) {
+            e.preventDefault();
+            alert("Richiesta inviata! Ti reindirizziamo su WhatsApp per completare l'ordine.");
+            closeModal();
+        }
+
+        function submitCustomOrder() {
+            const price = document.getElementById('total-price').innerText;
+            const size = document.getElementById('summary-size').innerText;
+            const base = document.getElementById('summary-base').innerText;
+            const cream = document.getElementById('summary-cream').innerText;
+            const text = document.getElementById('cake-text').value || "Nessuna scritta";
+
+            const msg = `Ciao Millevoglie! Vorrei ordinare una torta personalizzata:\n- Porzioni: ${size}\n- Base: ${base}\n- Farcitura: ${cream}\n- Scritta: ${text}\nTotale stimato: ${price}`;
+            
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function triggerWhatsAppDirect() {
+            window.open('https://wa.me/?text=Ciao%20Millevoglie%20Vorrei%20informazioni%20sui%20vostri%20prodotti.', '_blank');
+        }
+
+        // Scorrimento Orizzontale per la slide Aree Tematiche
+// Step di scorrimento: qui puoi modificare di quanti pixel spostarti
+// Inserisci la larghezza effettiva di una card compreso il gap (es. 320px o 344px)
+let isAnimating = false;
+
+function scrollAree(direction) {
+    if (isAnimating) return;
+
+    const container = document.getElementById('aree-container');
+    const cards = container.children;
+    if (cards.length === 0) return;
+
+    // --- DOVE MODIFICARE LO STEP ---
+    // Calcola la larghezza esatta di una card + il gap tra le card
+    const firstCard = cards[0];
+    const computedGap = parseFloat(window.getComputedStyle(container).gap) || 24;
+    const step = firstCard.offsetWidth + computedGap; 
+    // Puoi sostituire 'step' con un valore fisso numerico se preferisci (es. const step = 320;)
+
+    const duration = 400; // Durata dell'animazione in ms (coerente con la velocità)
+    isAnimating = true;
+
+    if (direction === 'right') {
+        // 1. Applica la transizione fluida verso sinistra
+        Array.from(cards).forEach(card => {
+            card.style.transition = `transform ${duration}ms cubic-bezier(0.25, 1, 0.5, 1)`;
+            card.style.transform = `translateX(-${step}px)`;
+        });
+
+        // 2. Al termine dell'animazione, sposta il primo elemento in fondo ed azzera la traslazione
+        setTimeout(() => {
+            Array.from(cards).forEach(card => {
+                card.style.transition = 'none';
+                card.style.transform = 'translateX(0)';
+            });
+            
+            // Sposta fisicamente il nodo nel DOM
+            container.appendChild(firstCard);
+
+            // Forza il reflow del browser prima di sbloccare nuove interazioni
+            void container.offsetWidth; 
+            isAnimating = false;
+        }, duration);
+
+    } else if (direction === 'left') {
+        // 1. Prendi l'ultima card e spostala immediatamente all'inizio
+        const lastCard = cards[cards.length - 1];
+        
+        // Disabilita la transizione per preparare la posizione iniziale fuoricampo
+        Array.from(cards).forEach(card => card.style.transition = 'none');
+        container.insertBefore(lastCard, firstCard);
+
+        // Posiziona temporaneamente le card a -step per farle sembrare ferme
+        Array.from(cards).forEach(card => {
+            card.style.transform = `translateX(-${step}px)`;
+        });
+
+        // Forza il reflow per applicare lo stato -step senza animazione
+        void container.offsetWidth;
+
+        // 2. Anima tutte le card verso la posizione 0 (verso destra)
+        Array.from(cards).forEach(card => {
+            card.style.transition = `transform ${duration}ms cubic-bezier(0.25, 1, 0.5, 1)`;
+            card.style.transform = `translateX(0)`;
+        });
+
+        setTimeout(() => {
+            isAnimating = false;
+        }, duration);
+    }
+}
+        // Inizializzazione al caricamento
+        window.onload = function() {
+            calculateCakePrice();
+        };
+    </script>
+</body>
+</html>
