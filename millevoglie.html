@@ -1013,6 +1013,7 @@ class="absolute right-0 top-1/2 -translate-y-1/2 z-20 h-28 w-9 sm:w-10 rounded-l
         let currentBasePrice = 38;
         let currentBaseExtra = 0;
         let selectedBaseName = "Classica Vaniglia";
+        let numero="3936351302";
 
         // Cambia Tema / Palette Colori Live
         function setTheme(themeName) {
@@ -1092,14 +1093,20 @@ class="absolute right-0 top-1/2 -translate-y-1/2 z-20 h-28 w-9 sm:w-10 rounded-l
             const base = document.getElementById('summary-base').innerText;
             const cream = document.getElementById('summary-cream').innerText;
             const text = document.getElementById('cake-text').value || "Nessuna scritta";
+            const numero="3936351302";
 
             const msg = `Ciao Millevoglie! Vorrei ordinare una torta personalizzata:\n- Porzioni: ${size}\n- Base: ${base}\n- Farcitura: ${cream}\n- Scritta: ${text}\nTotale stimato: ${price}`;
-            
-            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        
+
+            window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, '_blank','noopener');
+
         }
 
         function triggerWhatsAppDirect() {
-            window.open('https://wa.me/?text=Ciao%20Millevoglie%20Vorrei%20informazioni%20sui%20vostri%20prodotti.', '_blank');
+            const numero="3936351302";
+            const msg ='Ciao Millevoglie Vorrei informazioni sui vostri prodotti.';
+
+            window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, '_blank','noopener');
         }
 
         // Scorrimento Orizzontale per la slide Aree Tematiche
